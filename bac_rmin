@@ -1,0 +1,5 @@
+#!/bin/bash
+#See output with tail -f log
+
+ssh -M -S ./sql-socket_3310 -fnNT -L 3310:localhost:3306 $1 -o ExitOnForwardFailure=yes
+nohup stdbuf -o0 ./rmin > log_$(hostname) 2>&1 &
