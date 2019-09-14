@@ -202,9 +202,7 @@ void make_CO2_compare_runs(Assim_input_parser input_values) {
 
     db.open_connection(input_values.sql_username, input_values.sql_password, input_values.sql_port, input_values.tunnel_address);
     
-    ////////////////////////////////
     //Perform tests/////////////////
-    //////////////////////////////// 
     string exp_name = "WO CO2";
 
     ANA_experiment ana_exp(db, exp_name, input_values.time_period_id, input_values.rh_scale, input_values.temp_scale, input_values.grid_scale, input_values.grid_degrade);
@@ -253,9 +251,7 @@ void make_CO2_compare_runs(Assim_input_parser input_values) {
     //Save the analysis as well as the analytics
     p2.save_analysis(ana_exp2, analysis);
 
-    ////////////////////////////////
     //End tests/////////////////////
-    //////////////////////////////// 
     db.close_connection();
 
     printf("Ending compare CO2\n");
@@ -269,7 +265,7 @@ int main(int argc, char * argv[]) {
         for(int i=1; i<argc; i++)
             input_values.parse_line(argv[i]);
 
-    // Do perform the anylsis based on the inputs given 
+    // Use these functions to select with operation you would like 
     
     //load_up_tables(input_values);
     //get_analysis_for_given_area(input_values);

@@ -17,7 +17,7 @@
 
 using namespace std;
 
-// Given input of the observations and background, this class can compuate the analysis along with various properties of the analyis
+// Given input of the observations and background, this class can compuate the analysis along with various properties of the analysis
 class Seasonal_correlated_minimiser : public ccm {
     private:
         vector<Wang_P_Budyko*> full_grid_stos;

@@ -10,7 +10,7 @@
 #include "lin_maths.h"
 #include "location.h"
 
-
+// Peform general observation function calculations as well as dimensionalise and non-dimensionalising
 class MI_alpha_calc { 
     protected:
         orbital orb;
@@ -36,6 +36,7 @@ class MI_alpha_calc {
         loc get_position() { return location; }
 };
 
+// The full observation function that can correct for [CO_2] change
 class Wang_P_Budyko : public MI_alpha_calc, public sto {
     protected:
         Seasonal_Modern_reading &sta_modern_climate;

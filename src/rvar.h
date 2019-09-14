@@ -61,7 +61,6 @@ class ccm {
         //The largest matrix here should be M 
         ccm(int ss, int os) : state_size(ss), obs_size(os), obs_weight(os), M(ss), observation(os), x_b(ss), current_result(ss) {}
         /*virtual ~ccm() { 
-            //IS SOMEONE CALLING THIS DESTRUCTOR TOO SOON, I ALSO CHANGED THE DESTRUCTOR IN Seasonal_Something_Minimiser
             //TODO: Can't delete observer for some reason
             //if(observer != NULL)
             //    delete observer;

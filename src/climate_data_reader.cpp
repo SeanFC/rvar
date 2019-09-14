@@ -27,6 +27,7 @@ Seasonal_correlated_minimiser::Seasonal_correlated_minimiser(
 
     Seasonal_space_reading new_sd = Seasonal_space_reading();
 
+    // If we're performig a test run and set several variables to specifc values
     bool single_site_test = false;
 
     Vec_f bac_err_scaling = Vec_f(13);
@@ -112,22 +113,6 @@ Seasonal_correlated_minimiser::Seasonal_correlated_minimiser(
         }
     }
 
-    // Test sensitivty in the error
-    /* 
-    int var_index = 4;
-    int obs_index = 0;
-    double variance_change = 1;
-    int R_index = obs_index*inner_obs_dim + var_index;
-    obs[obs_index]->get_loc().print();
-    obs[obs_index]->get_sd().print();
-
-    printf("Old R at %i: %f\n", R_index, R.get(R_index));
-
-    R.set(R_index, 1.0/(1.0/R.get(R_index) + variance_change));
-    obs_weight.set(R_index, 1/R.get(R_index));
-
-    printf("New R at %i: %f\n", R_index, R.get(R_index));
-    */
 }
 
 // Delete both the observation functions
@@ -155,12 +140,12 @@ void Seasonal_correlated_minimiser::set_scales(double rh_scale, double temp_scal
     //Add in background variance
     M.bracket_diag(bac_sd_eye);
 
-    printf("Square rooting B matrix start\n");
+    printf("Square rooting matrix B start\n");
 
     //Square root the B matrix
     M.eigen_square_root_inplace();
 
-    printf("Square rooting B matrix finished\n");
+    printf("Square rooting matrix B finished\n");
    
     //Create observation functions 
     observer = new Wang_P_Budyko_grid(s2o, state_location_grid, inner_state_dim, inner_obs_dim, grid_scale, number_of_threads);
@@ -278,13 +263,6 @@ Seasonal_correlated_minimiser::os_map Seasonal_correlated_minimiser::parse_curre
         MI_alpha_calc::dimensionalise_obs_with_sd(current_obs);
         output_map.obs.push_back(current_obs);
 
-        //Redimensionalise the background and background sd and use it to save the attribution 
-        //am_sd_reading current_bac_obs = am_sd_reading(
-        //        obs_background.get_sub_vec(i*inner_obs_dim, (i+1)*inner_obs_dim),
-        //        obs_background_sds.get_sub_vec(i*inner_obs_dim, (i+1)*inner_obs_dim)
-        //        );
-
-        //MI_alpha_calc::dimensionalise_obs_with_sd(current_bac_obs);
         
         output_map.attrib.push_back(am_space_reading(attrib.get_sub_vec(i*inner_obs_dim, (i+1)*inner_obs_dim)));
     }
@@ -295,9 +273,7 @@ Seasonal_correlated_minimiser::os_map Seasonal_correlated_minimiser::parse_curre
     output_map.cost = result.cost;
     output_map.gradient = result.gradient; 
 
-    //The hessian of the 'true' mi obs function (y_c)
-    //output_map.H_a = no_CO2_observer->jacobian(result.x);
-
+    // Calculate extra diagnostics
     bool calculate_resolution = false;
     bool calculate_cond = false;
 
@@ -394,33 +370,6 @@ pmip_seasonal_assimilator::pmip_seasonal_assimilator(
     modern_readings = modern.get_area(lat_max, lat_min, lon_max, lon_min, grid_degrade);
     stos = vector<Wang_P_Budyko*>(); 
     state_grid_stos = vector<Wang_P_Budyko*>(); 
-
-    // Regrid down the background data
-    //double premade_grid_size = 0.5;
-    //loc on_grid_loc = complete_back[0]->get_loc();
-
-    /*unsigned int wanted_amount = 4000; //4000
-
-    if(wanted_amount < obs_readings.size()) {
-        int nearest_power = floor(log2(obs_readings.size()));
-        obs_readings.erase(obs_readings.begin(), obs_readings.begin() + (obs_readings.size() - pow(2, nearest_power)));
-
-        int shift_amount = 0;
-        int amount_of_obs = obs_readings.size();
-        double obs_left = amount_of_obs;
-
-        //Unfortunately I don't know an expression to find shift_amount without this iterative process
-        while(obs_left > wanted_amount and shift_amount < 400 and obs_left > 0) {
-            shift_amount++;
-            obs_left -= amount_of_obs*pow(2, -shift_amount);
-        }
-
-        for(int i=0; i<shift_amount; i++) {
-            //Get rid of every other reading
-            for(auto it = obs_readings.begin(); it < obs_readings.end(); it++) 
-                it = obs_readings.erase(it);
-        }
-    }*/
     
     double distance_cutoff = 0.1;
 
@@ -457,11 +406,6 @@ pmip_seasonal_assimilator::pmip_seasonal_assimilator(
 
     printf("Bac R:%lu, Sta:%lu, Bac:%lu, Obs:%lu\n", all_back_readings.size(), modern_readings.size(), back_readings.size(), obs_readings.size());
 
-    //Really we could get a better approx of modern using a closest method but that would take forever to run without some better db design 
-    /*vector<loc> obs_locations = vector<loc>();
-    for(unsigned int i=0; i<obs_readings.size(); i++)
-        obs_locations.push_back(obs_readings[i]->get_location());
-    vector<CRU_accessor::CRU_seasonal_reading*> close_mod_set = modern.get_closest_set(obs_locations);*/
 
     for(unsigned int i=0; i<obs_readings.size(); i++) {
         int closest_mod_index = 0;
@@ -475,7 +419,7 @@ pmip_seasonal_assimilator::pmip_seasonal_assimilator(
             }
         }
 
-        //TODO:Someone needs to delete these Wang_P_Budykos    
+        //TODO: Something needs to delete these Wang_P_Budykos    
         stos.push_back(new Wang_P_Budyko(
                     *(modern_readings[closest_mod_index]), 
                     *(modern_readings[closest_mod_index]), 
@@ -543,11 +487,12 @@ void pmip_seasonal_assimilator::save_analysis(ANA_experiment &analysis, Seasonal
                 computed_ana.attrib[i]
                 );
     }
-    //TODO: Why can't we do computed_ana.states[0].print(); !?!?!?!?!?!?
-    
-    bool save_file = false; // TODO: This should be set by the user
-    if(save_file) {
+   
+    // Whether to save the diagnostic information to a file
+    // TODO: Move this to not be selected at compile time
+    bool save_file = false;  
 
+    if(save_file) {
         printf("Saving to file\n");
         ofstream outfile("res/output" + to_string(analysis.get_experiment_id()) + ".rvar");
         

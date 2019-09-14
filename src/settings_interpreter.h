@@ -13,30 +13,33 @@ using namespace std;
 //Hold all the inputs to a particular experiment 
 class Assim_input_parser {
     public:
-        //The settings determine an experiment
-        double rh_scale = 1;
-        double temp_scale = 1;
-        double grid_scale = 0.15;
-        string sql_username = "";
-        string sql_password = "";
-        int sql_port = 3306;
-        int time_period_id = 1;
-        string experiment_name = "";
-        int grid_degrade = 1;
-        bool tunneling = false;
-        int connection_port = 3307;
-        bool sql_verbose = false;
-        bool use_CO2 = true;
-        bool exclude_PSM_obs = false;
-        string tunnel_address = "";
+        //The settings to use in an experiment
+        
+        string experiment_name = "";        // A name to give to the experiment when saving
+        double rh_scale = 1;                // The relative humidity temporal length scale. Deprecated
+        double temp_scale = 1;              // The temperature temporal length scale
+        double grid_scale = 0.15;           // The spatial length scale
 
-        double lat_max = 21.25; 
-        double lat_min = 20.8; 
-        double lon_max = 18.6; 
-        double lon_min = 18.25; 
+        int time_period_id = 1;             // The time period code for the time period in the database (generally 1 is LGM and 2 is MH)
+        bool use_CO2 = true;                // Correct for changes in CO2
+        bool exclude_PSM_obs = false;       // Exclude observations made using model inversion
+        
+        string sql_username = "";           // Username for SQL database
+        string sql_password = "";           // Password for SQL database
+        int sql_port = 3306;                // Port of SQL database
+        int grid_degrade = 1;               // Only use every grid_degrade grid cell to make the background, useful for testing
+        bool tunneling = false;             // Tunnel to a remote database. Deprecated
+        int connection_port = 3307;         // The port used to connect to the remote database
+        bool sql_verbose = false;           // Print out SQL commands
+        string tunnel_address = "";         // The address of the SQL database to tunnel to, currently deprecated
 
-        int number_of_threads = 0;
-        bool open_blas_threading = false;
+        double lat_max = 21.25;             // The maximum latitude to consider
+        double lat_min = 20.8;              // The minimum latitude to consider
+        double lon_max = 18.6;              // The maximum logitude to consider
+        double lon_min = 18.25;             // The minimum logitude to consider
+
+        int number_of_threads = 0;          // How many threads to use if not using open_blas_threading. Deprecated
+        bool open_blas_threading = false;   // Leave the multithreading to openBLAS, this is incompatible with using our own multithreading. Deprecated
 
         //Constructor
         Assim_input_parser();

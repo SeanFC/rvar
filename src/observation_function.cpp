@@ -1,5 +1,6 @@
 #include "observation_function.h"
 
+// Calculate the jacobian at a given point, use multiple threads if possible 
 Mat_f sto::jacobian(Vec_f point) {
     Vec_f run_at_point = state_to_observation(point);
     Mat_f output(run_at_point.get_size(), point.get_size());
@@ -67,6 +68,7 @@ Mat_f sto::jacobian(Vec_f point) {
     return output; 
 }
 
+// Calculate the part of the jacobian starting and ending at the indicies given
 Mat_f sto::partial_jacobian(Vec_f point, Mat_f *output, int start_index, int finish_index, Vec_f run_at_point) {
     for(int i=0; i<finish_index-start_index; i++)
         output->set(0, i, derivative(point, run_at_point, i+start_index)); 
@@ -74,6 +76,7 @@ Mat_f sto::partial_jacobian(Vec_f point, Mat_f *output, int start_index, int fin
     return *output;
 }
 
+// A generic derivative calculator for all observation functions 
 Vec_f sto::derivative(const Vec_f &point, const Vec_f &reference_run, int index) {
     //TODO:Double here?
     float x = point.get(index);

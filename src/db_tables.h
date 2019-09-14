@@ -15,6 +15,7 @@
 #include <cppconn/prepared_statement.h>
 #include "mysql_connection.h"
 
+//TODO: Running ssh to tunnel to an sql database is unsupported in the C++ portion of this code
 //#include <libssh/libssh.h>
 
 #include "lin_maths.h"
@@ -22,6 +23,7 @@
 
 using namespace std;
 
+// Connect and send commands to an SQL database
 class sql_database {
     private:
         shared_ptr<sql::Connection> con; 
@@ -42,6 +44,7 @@ class sql_database {
         bool verbose() { return sql_verbose; }
 };
 
+// A table in an SQL database
 class sql_table {
         sql_database &base;
 
@@ -69,10 +72,7 @@ class sql_table {
 
 };
 
-/*Database structure
-* ANA_experiment, ANA_seasonal, CRU_state, INFO_position, INFO_time, OBS, PMIP_model, PMIP_state, PMIP_state_sd
- */
-
+// Types of subsets of tables that can exist in the database
 class Seasonal_state_table {
     public:
         static const char seasonal_state_name_type[];
@@ -118,9 +118,12 @@ class location_table {
         string get_box_condition(double low_lat, double high_lat, double low_lon, double high_lon);
 };
 
-//////////////////////////////////////////////////////////////////////////////////////
+// Full tables in the database ///////////////////////////////////////////////////////
+// These are the actual tables in the database that can be used to input and export information.
+// The general structure for the classes is to store the table headers and provide functions to add and retrive records.
+// They are all built on the class defined above to abstract many of the general methods (e.g. the constructor).
+
 //INFO tables/////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
 //INFO_position : id, lat, lon, elev
 class INFO_position_table : public sql_table, public location_table {
     public:

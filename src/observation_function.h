@@ -14,9 +14,9 @@ const int thread_cap = 14;
 //State to Observation
 class sto {
     protected:
-        float eps = std::numeric_limits<float>::epsilon();
-        int number_of_threads;
-        bool TIMING_VERBOSE = false;
+        float eps = std::numeric_limits<float>::epsilon();  // The numeric limits of the system this is being run on 
+        int number_of_threads;                              // How many threads we're going to give this
+        bool TIMING_VERBOSE = false;                        // uUse to test timings
 
     public:
         sto(int no_o_threads = 0) : number_of_threads(no_o_threads) {

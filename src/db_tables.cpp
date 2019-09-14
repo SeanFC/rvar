@@ -1,5 +1,9 @@
 #include "db_tables.h"
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Constants for all the SQL table headers ///////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
 const char Seasonal_state_table::seasonal_state_name_type[] = 
 "MAP float, "
 "temp_1 float, temp_2 float, temp_3 float, temp_4 float, temp_5 float, temp_6 float, temp_7 float, temp_8 float, temp_9 float, temp_10 float, temp_11 float, temp_12 float";
@@ -110,7 +114,7 @@ const char ANA_seasonal_table::position_id_name_type[] = "position_id int";
 const char ANA_seasonal_table::experiment_id_name[] = "experiment_id";
 const char ANA_seasonal_table::experiment_id_name_type[] = "experiment_id int";
 
-/*
+/* TODO:
  * One can make better use of these commands in the sql db interface
  *  sql::Connection::isValid() checks whether the connection is alive
  *  sql::Connection::reconnect() reconnects if the connection has gone down
@@ -131,79 +135,7 @@ sql_database::~sql_database() {
 void sql_database::open_connection(string username, string password, int port, string tunnel_address) {
     //If the server is remote and the sql interface isn't open we set up an ssh tunnel to the machine at the connection port and interface that way
     if(tunnel) {
-        /*
-        printf("%s\n", ("ssh -M -S ./sql-socket_"+to_string(connection_port) + " -fnNT -L "+to_string(connection_port)+":localhost:"+ to_string(port) + " "+ tunnel_address + " -o ExitOnForwardFailure=yes").c_str());
-
-        if(system(("ssh -M -S ./sql-socket_"+to_string(connection_port) + " -fnNT -L "+to_string(connection_port)+":localhost:"+ to_string(port) + " "+ tunnel_address + " -o ExitOnForwardFailure=yes").c_str())) {
-            printf("Error: System call set up ssh socket had a problem\n");
-        */
-        
-        //Create an ssh connection, need to mess around with sockets to get it to be useful
-        /*printf("Starting tunnelling\n");
-
-        int verbosity = SSH_LOG_PROTOCOL;
-        int port = 22;
-
-        ssh_session my_ssh_session = ssh_new();
-        if (my_ssh_session == NULL)
-            exit(-1);
-
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, username.c_str());
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "INSERT HOSTNAME STRING");
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_PORT, &port);
-
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_SSH_DIR, "~/.ssh");
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_KNOWNHOSTS, "~/.ssh/known_hosts");
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_GLOBAL_KNOWNHOSTS, "~/.ssh/known_hosts"); //TODO:This is bad form, but I can't get the local known hosts to work
-        
-        //Connect to server        
-        int rc = ssh_connect(my_ssh_session);
-        if (rc != SSH_OK) {
-            fprintf(stderr, "Error connecting to localhost: %s\n", ssh_get_error(my_ssh_session));
-            exit(-1);
-        }
-        
-        //Verify that we know this host
-        enum ssh_known_hosts_e state = ssh_session_is_known_server(my_ssh_session);
-        switch (state) {
-            case SSH_KNOWN_HOSTS_OK:
-                break;
-            default:
-                fprintf(stderr, "Unknown host\n"); 
-                break;
-        }
-        
-        //Authenticate with a public key
-        rc = ssh_userauth_publickey_auto(my_ssh_session, NULL, NULL);
-
-        if (rc == SSH_AUTH_ERROR) {
-            fprintf(stderr, "Authentication failed: %s\n", ssh_get_error(my_ssh_session));
-            exit(-1);
-        }
-
-        //Set up a forwarding port
-        ssh_channel forwarding_channel;
-        forwarding_channel = ssh_channel_new(my_ssh_session);
-
-        if (forwarding_channel == NULL) {
-            fprintf(stderr, "No fowarding created: %s\n", ssh_get_error(my_ssh_session));
-        }
-        rc = ssh_channel_open_forward(forwarding_channel,
-                "INSERT HOSTNAME STRING", 22,
-                "127.0.0.1", connection_port);
-
-        if (rc != SSH_OK) {
-            fprintf(stderr, "Fowarding channel not established: %s\n", ssh_get_error(my_ssh_session));
-            ssh_channel_free(forwarding_channel);
-        }
-        
-        //ssh_channel_free(forwarding_channel);
-
-        //Close the connection and exit
-        //ssh_disconnect(my_ssh_session);
-        //ssh_free(my_ssh_session);
-        */
+        //TODO: Currently unsupported, create a tunnel using bac_rmin instead
     }
 
     con = shared_ptr<sql::Connection>(driver->connect(("tcp://127.0.0.1:"+to_string(connection_port)).c_str(), username.c_str(), password.c_str())); 
@@ -219,6 +151,7 @@ void sql_database::open_connection(string username, string password, int port, s
 
 void sql_database::close_connection() {
     if(tunnel) {
+        //TODO: This is currently unsupported
         //if(system(("ssh -S ./sql-socket_"+to_string(connection_port)+" -O exit INSERT HOSTNAME STRING").c_str()))  {
         //    printf("Error: System call to close ssh socket had a problem\n");
         //}

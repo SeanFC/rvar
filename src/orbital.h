@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-//Set known characteristics of a body
+//Set known characteristics of a climate 
 struct orbital {
     //Orbital paramters
     double eccentricity;
