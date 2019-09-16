@@ -1,6 +1,6 @@
 # RVAR 
 
-Make spatially coherent palaeoclimate gridded maps by combining site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method.
+Make spatially coherent palaeoclimate gridded maps by combining site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method. Implements the method shown in [this paper](https://arxiv.org/abs/1902.04973).
 
 ## What this code can do 
 Puts into a SQL database cleaned outputs from:
@@ -11,9 +11,9 @@ Puts into a SQL database cleaned outputs from:
 
 This data is run through a 3D-Variational (3D-Var) data assimilator to find the best a posteriori estimate of the palaeoclimate.
 The estimate and its first order variance is saved to the SQL database and other diagnostic quantities (such as condition number) can be output to text files. 
-The method also corrects for changes in atmospheric CO<sub>2</sub> concentration between the palaeo and reference time periods.
+The method also corrects for changes in atmospheric CO<sub>2</sub> concentration between palaeo and reference time periods.
 
-## Setup
+## Setup to make reconstructions
 Most of the setup must be user configured and was tested on a machine running archlinux. 
 
 ### Compilation 
@@ -29,18 +29,18 @@ First install the prerequisite packages:
 
 Run `make configure` to create machine specific files.
 
-Run `make` from the root directory to compile the code, this should created an executable named `rmin`.
+Run `make` from the root directory to compile the code, this creates an executable named `rmin`.
 
 ### Install 
 
-An SQL database named `clim` must be available with the pollen reconstructions, PMIP3 and CRU CL 2.0 data; running the setup functions from `main` can help with this.
-Also a username and password supplied for the database must be added to the configuration file in the `config` directory.
-The configuration file is named the username of the machine which is running the code, found from running `hostname`, with the postfix `.cfg`.
+An SQL database named `clim` must be available with the pollen reconstructions, PMIP3 and CRU CL 2.0 data; running the setup functions from `src/main.cpp` can help with this.
+A username and password supplied for the database must be added to the configuration file in the `config` directory.
+The configuration file is named with the host name of the machine which is running the code (found from running `hostname`) with the postfix `.cfg`.
 
 ### Run
 
 The assimilator can be run with executable `rmin`. 
-Alternatively, the assimilator can be run in the background, tunnelled to an exterior database, by adding the correct configuration options and running the `bac_rmin` script.
+Alternatively, the assimilator can be run in the background and tunnelled to an exterior database by running the `bac_rmin` script.
 
 ## Further Information
 Details of the method that this code implements can be found at the [arXiv](https://arxiv.org/abs/1902.04973). 
