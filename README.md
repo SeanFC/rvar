@@ -1,16 +1,16 @@
 # RVAR 
 
-Make spatially coherent palaeoclimate gridded maps from site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method.
+Make spatially coherent palaeoclimate gridded maps by combining site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method.
 
 ## What this code can do 
-Puts into a SQL database, clean outputs from:
+Puts into a SQL database cleaned outputs from:
 
 * Pollen reconstructions from Bartlein et al. (2011)
 * The 3rd round of the Palaeoclimate Modelling Intercomparison Project (PMIP3; Braconnot et al. 2012) 
-* Climate Research Unit’s CL v2.0 (CRU CL 2.0; New et al. 2002) to use as a modern climate base line
+* Climate Research Unit’s CL v2.0 (CRU CL 2.0; New et al. 2002) 
 
 This data is run through a 3D-Variational (3D-Var) data assimilator to find the best a posteriori estimate of the palaeoclimate.
-The estimate and its uncertainty is saved to the SQL database and other diagnostic quantities (such as condition number) can be output to text files. 
+The estimate and its first order variance is saved to the SQL database and other diagnostic quantities (such as condition number) can be output to text files. 
 The method also corrects for changes in atmospheric CO<sub>2</sub> concentration between the palaeo and reference time periods.
 
 ## Setup
@@ -31,7 +31,6 @@ Run `make configure` to create machine specific files.
 
 Run `make` from the root directory to compile the code, this should created an executable named `rmin`.
 
-
 ### Install 
 
 An SQL database named `clim` must be available with the pollen reconstructions, PMIP3 and CRU CL 2.0 data; running the setup functions from `main` can help with this.
@@ -47,14 +46,12 @@ Alternatively, the assimilator can be run in the background, tunnelled to an ext
 Details of the method that this code implements can be found at the [arXiv](https://arxiv.org/abs/1902.04973). 
 This code has been used to generate the data for a paper at [Climate of the Past](https://www.clim-past-discuss.net/cp-2019-55/); the data can be found at the [University of Reading Data Archive](http://dx.doi.org/10.17864/1947.206).
 
-
 ## Contact
 Sean F. Cleator
 
 Email: s.cleator@surrey.ac.uk
 
 ORCid: [0000-0001-9602-1989](https://orcid.org/0000-0001-9602-1989)
-
 
 ## References
 
