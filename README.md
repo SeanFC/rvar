@@ -1,9 +1,9 @@
 # RVAR 
 
-Make spatially coherent palaeoclimate gridded maps by combining site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method. Implements the method shown in [this paper](https://arxiv.org/abs/1902.04973).
+Make spatially coherent gridded maps of the palaeoclimate by combining site-based pollen reconstructions and climate model outputs using a conditioned 3D variational data assimilation method. Implements the method shown in [this paper](https://arxiv.org/abs/1902.04973).
 
 ## What this code can do 
-Puts into a SQL database cleaned outputs from:
+Puts into a SQL database, cleaned outputs from:
 
 * Pollen reconstructions from Bartlein et al. (2011)
 * The 3rd round of the Palaeoclimate Modelling Intercomparison Project (PMIP3; Braconnot et al. 2012) 
@@ -39,7 +39,7 @@ The configuration file is named with the host name of the machine which is runni
 
 ### Run
 
-The assimilator can be run with executable `rmin`. 
+The assimilator can be run with the executable `rmin`. 
 Alternatively, the assimilator can be run in the background and tunnelled to an exterior database by running the `bac_rmin` script.
 
 ## Further Information
