@@ -1,0 +1,11 @@
+CXXFLAGS = -Wall -pg -g -pedantic -std=c++11 -fpermissive  #-O3 
+#-I ${build_directory}/liblbfgs/include -I ${build_directory}/mysql-connector-cpp -I ${build_directory}/mysql-connector-cpp/driver -I ${build_directory}/netcdf-cxx4-4.3.0/cxx4 #-I lib/splash_f#`ncxx4-config --cflags` 
+#TODO: Get rid of fpermissive!
+#-MD option is interesting
+
+CXXLFLAGS = -Wl,-rpath -Wl,/usr/local/lib -L/usr/lib -pg -pthread -lmysqlcppconn -lnetcdf_c++4 -llbfgs -lgfortran -lopenblas -lcblas -llapacke -lssh #-llapack #-llapack_atlas
+
+#-L${build_directory}/netcdf-cxx4-4.3.0/cxx4/.libs -L${build_directory}/liblbfgs/lib/.libs -L${build_directory}/mysql-connector-cpp/driver -L/usr/local/lib -Wl,-rpath=/usr/local/lib -Wl,-rpath=${build_directory}/netcdf-cxx4-4.3.0/cxx4/.libs -Wl,-rpath=${build_directory}/liblbfgs/lib/.libs -Wl,-rpath=${build_directory}/mysql-connector-cpp/driver -lmysqlcppconn -lnetcdf_c++4 -lnetcdf -lcblas -llbfgs -lgfortran -latlas -llapack_atlas
+
+#To install splash lib put it in /usr/local/lib or /usr/lib and run ldconfig, then you don't need the rpath and -L stuff, just -l
+#rpath is the run path, it tells ld (the linux dynamic loader) places to look at run time to find libraries, -L is the directories to search for libraries from linking, -l is a library to link to (note that libraries must be called lib(NAME).so.(VERSION_NUMBERS)
